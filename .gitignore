@@ -13,3 +13,7 @@ composer.lock
 
 # Ignorer les fichiers de sortie ou de compilation
 out/
+
+# Fichiers IntelliJ
+*.idea
+*.iml
