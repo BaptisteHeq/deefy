@@ -12,7 +12,7 @@ vendor/
 composer.lock
 
 # Ignorer les fichiers de sortie ou de compilation
-out/
+/out
 
 # Fichiers IntelliJ
 *.idea
