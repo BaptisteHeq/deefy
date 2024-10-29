@@ -2,6 +2,7 @@
 
 namespace iutnc\deefy\repository;
 
+use Exception;
 use iutnc\deefy\audio\lists\Playlist;
 use iutnc\deefy\audio\tracks\AlbumTrack;
 use PDO;
@@ -172,6 +173,7 @@ Les playlists ne contiennent pas les pistes. */
                     $p->setDuree($trackData['duree']);
                     $p->setDate($trackData['date_posdcast']);
                     $p->setGenre($trackData['genre']);
+                    $p->setId($trackData['id']);
                     $list[] = $p;
                 }
             }
@@ -214,7 +216,11 @@ Les playlists ne contiennent pas les pistes. */
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':id' => $id]);
         $filename = $stmt->fetch(PDO::FETCH_ASSOC);
-        unlink('./audio/'.$filename['filename']);
+        try {
+            unlink('./audio/'.$filename['filename']);
+        } catch (Exception $e) {
+            echo 'Exception reçue : ',  $e->getMessage(), "\n";
+        }
 
         $sql = "DELETE FROM track WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
