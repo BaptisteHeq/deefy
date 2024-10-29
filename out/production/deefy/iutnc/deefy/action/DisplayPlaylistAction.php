@@ -9,7 +9,7 @@ use iutnc\deefy\repository\DeefyRepository;
 class DisplayPlaylistAction extends Action {
 
     public function execute(): string {
-        $html = '<b>Affichage de la Playlist</b>';
+        $html = '<b>Affichage de la Playlist</b><br>';
 
         if (!isset($_GET['playlist_id'])) {
             $html .= '<b>pas de playlist</b>';
@@ -21,6 +21,7 @@ class DisplayPlaylistAction extends Action {
             if ($playlist) {
                 $_SESSION['playlist'] = serialize($playlist); // Ajouter la playlist à la session
                 echo 'Playlist ajoutée à la session : ' ;  // indiquer
+                $html .= '<a href="?action=delete-playlist&playlist_id='.$_GET['playlist_id'].'">Supprimer la playlist</a>';
             } else {
                 echo 'Playlist introuvable';
             }
@@ -36,7 +37,7 @@ class DisplayPlaylistAction extends Action {
             //ajouter un lien pour ajouter une track
             $html .= '<a href="?action=add-track">Ajouter une piste</a> <br>';
             //ajouter un lien pour supprimer la playlist
-            $html .= '<a href="?action=delete-playlist">Supprimer la playlist</a>';
+
         }
 
         return $html;
