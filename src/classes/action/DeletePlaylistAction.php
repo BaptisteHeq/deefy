@@ -15,13 +15,9 @@ class DeletePlaylistAction extends Action {
         }
         else {
             $r = DeefyRepository::getInstance();
-            $playlist = $r->getPlaylistById($_GET['playlist_id']);// Récupérer la playlist par ID
-            if ($playlist) {
-                $_SESSION['playlist'] = serialize($playlist); // Ajouter la playlist à la session
-                echo 'Playlist ajoutée à la session : ' ;  // indiquer
-            } else {
-                echo 'Playlist introuvable';
-            }
+            $html .= 'supression de la playlist '.$_GET['playlist_id'];
+            $r->deletePlaylist($_GET['playlist_id']);// Récupérer la playlist par ID
+
         }
 
         if (! isset($_SESSION['playlist'])) {

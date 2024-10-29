@@ -34,7 +34,7 @@ class DisplayPlaylistAction extends Action {
             $r = new AudioListRenderer($pl);
             $html .= $r->render(Renderer::COMPACT);
             //ajouter un lien pour ajouter une track
-            $html .= '<a href="?action=add-track">Ajouter une piste</a>';
+            $html .= '<a href="?action=add-track">Ajouter une piste</a> <br>';
             //ajouter un lien pour supprimer la playlist
             $html .= '<a href="?action=delete-playlist">Supprimer la playlist</a>';
         }
