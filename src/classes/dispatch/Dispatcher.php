@@ -86,8 +86,6 @@ class Dispatcher
             <li><a href="?action=default">Accueil</a></li>
             <li><a href="?action=playlist">Playlist</a></li>
             <li><a href="?action=add-playlist">Ajouter Playlist</a></li>
-            <li><a href="?action=add-track">Ajouter Track</a></li>
-            <li><a href="?action=delete-playlist">Supprimer la playlist</a> </li>
             <li><a href="?action=add-user">Ajouter un utilisateur</a></li>
             <li><a href="?action=display-list-playlist">Liste des playlists</a></li>
         </ul>

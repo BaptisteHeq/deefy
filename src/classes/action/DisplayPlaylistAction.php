@@ -11,13 +11,12 @@ class DisplayPlaylistAction extends Action {
     public function execute(): string {
         $html = '<b>Affichage de la Playlist en session</b><br>';
 
-        if (!isset($_GET['playlist_id'])) {
+        if (isset($_GET['playlist_id'])) {
 
-        }
-        else {
             $r = DeefyRepository::getInstance();
             $playlist = $r->getPlaylistById($_GET['playlist_id']);// Récupérer la playlist par ID
             if ($playlist) {
+                $playlist->setId($_GET['playlist_id']);
                 $_SESSION['playlist'] = serialize($playlist); // Ajouter la playlist à la session
                 $html .= '<a href="?action=delete-playlist&playlist_id='.$_GET['playlist_id'].'">Supprimer la playlist</a>';
             } else {
@@ -31,8 +30,9 @@ class DisplayPlaylistAction extends Action {
             $pl = unserialize($_SESSION['playlist']);
             $r = new AudioListRenderer($pl);
             $html .= $r->render(Renderer::COMPACT);
+
             //ajouter un lien pour ajouter une track
-            $html .= '<a href="?action=add-track&playlist_id='.$_GET['playlist_id'].'">Ajouter une piste</a> <br>';
+            $html .= '<a href="?action=add-track">Ajouter une piste</a> <br>';
             //ajouter un lien pour supprimer la playlist
 
         }

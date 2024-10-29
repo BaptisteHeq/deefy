@@ -1,7 +1,7 @@
 <?php
 
-
 // class AlbumTrack {
+
 //     public string $titre;
 //     public string $artiste;
 //     public string $album;
@@ -25,11 +25,13 @@
 
 namespace iutnc\deefy\audio\tracks;
 
+use iutnc\deefy\exception\InvalidPropertyNameException;
+
 class AlbumTrack extends AudioTrack {
-    private string $artiste;
-    private string $album;
-    private int $annee;
-    private int $numeroPiste;
+    private string $artiste=' ';
+    private string $album = ' ';
+    private int $annee=0;
+    private int $numeroPiste=0;
 
     public function __construct(string $titre, string $nomFichier, string $album, int $numeroPiste = 0) {
         parent::__construct($titre, $nomFichier);
@@ -39,7 +41,7 @@ class AlbumTrack extends AudioTrack {
 
     public function __get(string $at): mixed {
         if (!property_exists($this, $at)) {
-            throw new \iutnc\deefy\exception\InvalidPropertyNameException("$at: invalid property");
+            throw new InvalidPropertyNameException("$at: invalid property");
         }
         return $this->$at;
     }
@@ -55,4 +57,8 @@ class AlbumTrack extends AudioTrack {
     public function setAnnee($a): void {
         $this->annee = $a;
     }
+
+
+
+
 }

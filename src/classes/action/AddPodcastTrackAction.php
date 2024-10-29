@@ -95,7 +95,7 @@ aléatoirement.
                 $renderer = new AudioListRenderer($playlist);
                 $html .= $renderer->render();
 
-                $html .= '<a href="?action=add-track&playlist_id='.$id.'">Ajouter une autre piste</a>';
+                $html .= '<a href="?action=add-track">Ajouter une autre piste</a>';
             }
         }
 

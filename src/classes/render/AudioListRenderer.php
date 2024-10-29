@@ -12,18 +12,14 @@ class AudioListRenderer implements Renderer {
     }
 
     public function render(int $selector = Renderer::COMPACT): string {
-        //ignore le selecteur 
+        //ignore le selecteur
         $html = "<h2>" . htmlspecialchars($this->audioList->nom) . "</h2>\n";
         $html .= "<ul>\n";
 
-        foreach ($this->audioList->pistes as $piste) {
-            $html .= "<li>" . htmlspecialchars($piste->titre) . " (" . $piste->duree . " secondes ) </li>\n";
 
-            // Lien pour écouter la piste audio (fichier sauvegardé dans le répertoire /audio)
-            $html .= "<audio controls>\n";
-            $html .= "<source src='./audio/" . htmlspecialchars($piste->nomFichier) . "' type='audio/mpeg'>\n";
-            $html .= "Votre navigateur ne supporte pas l'élément audio.\n";
-            $html .= "</audio>\n";
+        foreach ($this->audioList->pistes as $piste) {
+            $r = new AlbumTrackRenderer($piste);
+            $html .= "<li>" . $r->render($selector) . "</li>\n";
         }
 
         $html .= "</ul>\n";
