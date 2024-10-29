@@ -7,6 +7,7 @@ class AudioTrack {
     protected string $genre= '';
     protected int $duree=0;
     protected string $nomFichier = '';
+    protected int $id=0;
 
     public function __construct(string $titre, string $nomFichier) {
         $this->titre = $titre;
@@ -33,6 +34,10 @@ class AudioTrack {
 
     public function setGenre($g): void {
         $this->genre = $g;
+    }
+
+    public function setId($id): void {
+        $this->id = $id;
     }
 
 }

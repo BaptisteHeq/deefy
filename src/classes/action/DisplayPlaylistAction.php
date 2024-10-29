@@ -18,7 +18,6 @@ class DisplayPlaylistAction extends Action {
             if ($playlist) {
                 $playlist->setId($_GET['playlist_id']);
                 $_SESSION['playlist'] = serialize($playlist); // Ajouter la playlist à la session
-                $html .= '<a href="?action=delete-playlist&playlist_id='.$_GET['playlist_id'].'">Supprimer la playlist</a>';
             } else {
                 echo 'Playlist introuvable';
             }
@@ -27,6 +26,7 @@ class DisplayPlaylistAction extends Action {
         if (! isset($_SESSION['playlist'])) {
             $html .= '<b>pas de playlist</b>';
         } else {
+            $html .= '<a href="?action=delete-playlist">Supprimer la playlist</a>';
             $pl = unserialize($_SESSION['playlist']);
             $r = new AudioListRenderer($pl);
             $html .= $r->render(Renderer::COMPACT);

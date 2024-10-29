@@ -11,13 +11,23 @@ class Playlist extends AudioList {
         $this->dureeTotale += $piste->duree;
     }
 
-    public function supprimerPiste(int $index): void {
-        if ($index < 0 || $index >= $this->nbPistes) {
-            throw new \Exception("Invalid track index.");
+    public function supprimerPiste(int $id): void {
+        $pisteASupprimer = null;
+        foreach ($this->pistes as $piste) {
+            if ($piste->id === $id) {
+                $pisteASupprimer = $piste;
+                break;
+            }
         }
-        $this->dureeTotale -= $this->pistes[$index]->duree;
-        array_splice($this->pistes, $index, 1);
-        $this->nbPistes--;
+        if ($pisteASupprimer !== null) {
+            $this->nbPistes--;
+            $this->dureeTotale -= $pisteASupprimer->duree;
+            // Supprimer la piste du tableau
+            $this->pistes = array_filter($this->pistes, function ($piste) use ($id) {
+                return $piste->id !== $id;
+            });
+        }
+
     }
 
     public function ajouterListePistes(array $nouvellesPistes): void {

@@ -110,7 +110,9 @@ aléatoirement.
                     $track->setGenre($genre);
                     $track->setNumeroEpisode($pos);
 
+                    $track->setId($track_id);
                     $playlist->ajouterPiste($track);
+
 
                     $_SESSION['playlist'] = serialize($playlist);
                 } elseif ($type === 'A') {
@@ -125,6 +127,7 @@ aléatoirement.
                     $track->setAnnee($year);
                     $track->setGenre($genre);
 
+                    $track->setId($track_id);
                     $playlist->ajouterPiste($track);
 
                     $_SESSION['playlist'] = serialize($playlist);

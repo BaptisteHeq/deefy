@@ -158,18 +158,20 @@ Les playlists ne contiennent pas les pistes. */
 
             // Vérifier que des données ont bien été trouvées
             if ($trackData) {
-                if ($trackData['artiste_album'] != NULL ) {
+                if ($trackData['type'] === 'A') {
                     $a = new AlbumTrack($trackData['titre'], $trackData['filename'], $trackData['titre_album'], $row['no_piste_dans_liste']);
                     $a->setArtiste($trackData['artiste_album']);
                     $a->setDuree($trackData['duree']);
                     $a->setAnnee($trackData['annee_album']);
                     $a->setGenre($trackData['genre']);
+                    $a->setId($trackData['id']);
                     $list[] = $a;
-                } elseif ($trackData['auteur_podcast'] != NULL){
+                } elseif ($trackData['type'] === 'P') {
                     $p = new PodcastTrack($trackData['titre'], $trackData['filename']);
                     $p->setAuteur($trackData['auteur_podcast']);
                     $p->setDuree($trackData['duree']);
                     $p->setDate($trackData['date_posdcast']);
+                    $p->setGenre($trackData['genre']);
                     $list[] = $p;
                 }
             }

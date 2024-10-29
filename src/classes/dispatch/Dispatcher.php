@@ -10,7 +10,7 @@ use iutnc\deefy\action\DisplayPlaylistAction;
 use iutnc\deefy\action\DeletePlaylistAction;
 use iutnc\deefy\action\AddUserAction;
 use iutnc\deefy\action\DisplayListPlaylistAction;
-
+use iutnc\deefy\action\DeleteTrackAction;
 
 class Dispatcher
 {
@@ -57,6 +57,10 @@ class Dispatcher
                 break;
             case 'display-list-playlist':
                 $action = new DisplayListPlaylistAction();
+                $html = $action->execute();
+                break;
+            case 'delete-track':
+                $action = new DeleteTrackAction();
                 $html = $action->execute();
                 break;
 

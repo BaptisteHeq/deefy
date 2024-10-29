@@ -24,7 +24,7 @@ class AudioListRenderer implements Renderer {
             } else {
                 $r = new AlbumTrackRenderer($piste);
             }
-            $html .= "<li>" . $r->render($selector) . "</li>\n";
+            $html .= "<li>" . $r->render($selector) ."<a href='?action=delete-track&track_id=".$piste->id."'>supprimer track</a>" ."</li>\n";
         }
 
         $html .= "</ul>\n";
