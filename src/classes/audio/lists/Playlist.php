@@ -2,8 +2,10 @@
 
 namespace iutnc\deefy\audio\lists;
 
+use iutnc\deefy\audio\tracks\AudioTrack;
+
 class Playlist extends AudioList {
-    public function ajouterPiste(\iutnc\deefy\audio\tracks\AudioTrack $piste): void {
+    public function ajouterPiste(AudioTrack $piste): void {
         $this->pistes[] = $piste;
         $this->nbPistes++;
         $this->dureeTotale += $piste->duree;
@@ -42,4 +44,5 @@ class Playlist extends AudioList {
             'pistes' => $this->pistes,
         ]);
     }
+
 }

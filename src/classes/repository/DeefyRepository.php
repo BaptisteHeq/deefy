@@ -58,18 +58,23 @@ Les playlists ne contiennent pas les pistes. */
     }
 
     /*Sauvegarder une playlist vide de pistes */
-    public function savePlaylist(string $nom): void
+    public function savePlaylist(string $nom): int
     {
         $sql = "INSERT INTO playlist (nom) VALUES (:nom)";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':nom' => $nom]);
+
+        return (int)$this->pdo->lastInsertId();
     }
     /* Sauvegarder une piste ;*/
-    public function saveTrack(string $nomFichier, string $titre, int $duree, int $idPlaylist): void
+    public function saveTrack(string $titre, string $nomFichier, int $duree,string $genre,string $type,string $artiste,string $album,int $annee , int $idPlaylist): void
     {
-        $sql = "INSERT INTO piste (nomFichier, titre, duree, idPlaylist) VALUES (:nomFichier, :titre, :duree, :idPlaylist)";
+        $sql = "INSERT INTO track (titre, genre, duree, filename, type,artiste_album, titre_album, annee_album) VALUES ( :titre, :genre, :duree, :nomFichier, :type, :artiste, :album, :annee)";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':nomFichier' => $nomFichier, ':titre' => $titre, ':duree' => $duree, ':idPlaylist' => $idPlaylist]);
+        $stmt->execute([':titre' => $titre, ':genre' => $genre, ':duree' => $duree, ':nomFichier' => $nomFichier, ':type' => $type, ':artiste' => $artiste, ':album' => $album, ':annee' => $annee]);
+        $sql2 = "INSERT INTO playlist2track (id_pl, id_track, no_piste_dans_liste) VALUES (:idPlaylist, :idTrack, :no_piste_dans_liste)";
+        $stmt2 = $this->pdo->prepare($sql2);
+        $stmt2->execute([':idPlaylist' => $idPlaylist, ':idTrack' => $this->pdo->lastInsertId(), ':no_piste_dans_liste' => 1]);
     }
 
     /*Ajouter une  piste existante à une playlist */

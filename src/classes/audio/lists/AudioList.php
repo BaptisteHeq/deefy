@@ -7,6 +7,7 @@ class AudioList {
     protected int $nbPistes;
     protected int $dureeTotale;
     protected array $pistes;
+    protected int $id = 0;
 
     public function __construct(string $nom, array $pistes = []) {
         $this->nom = $nom;
@@ -30,4 +31,15 @@ class AudioList {
     public function __toString(): string {
         return json_encode($this);
     }
+
+    public function setId(int $id): void {
+        $this->id = $id;
+    }
+
+    public function getId(): int {
+        return $this->id;
+    }
+
+
+
 }

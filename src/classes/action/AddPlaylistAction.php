@@ -3,7 +3,6 @@
 namespace iutnc\deefy\action;
 
 use iutnc\deefy\audio\lists\Playlist;
-use iutnc\deefy\audio\tracks\AlbumTrack;
 use iutnc\deefy\render\AudioListRenderer;
 use iutnc\deefy\repository\DeefyRepository;
 
@@ -27,21 +26,23 @@ class AddPlaylistAction extends Action {
 
             $playlist_name = filter_var($_POST['playlist_name'], FILTER_SANITIZE_STRING);
 
-            if (!isset($_SESSION['playlist'])) {
-                $playlist = new Playlist($playlist_name,[]);
 
-                $_SESSION['playlist'] = serialize($playlist);
+            $playlist = new Playlist($playlist_name,[]);
 
-                $renderer = new AudioListRenderer($playlist);
-                $html .= $renderer->render();
+            // Sauvegarder la playlist dans la BD
+            $r = DeefyRepository::getInstance();
+            $id =$r->savePlaylist($playlist_name);
+            $playlist->setId($id);
 
-                $r = DeefyRepository::getInstance();
-                $r->savePlaylist($playlist);
+            $_SESSION['playlist'] = serialize($playlist);
 
-                $html .= '<a href="?action=add-track">Ajouter une piste</a>';
-            } else {
-                $html .= '<p>Une playlist existe déjà dans la session.</p>';
-            }
+
+            $renderer = new AudioListRenderer($playlist);
+            $html .= $renderer->render();
+
+
+            $html .= '<a href="?action=add-track&playlist_id='.$id.'">Ajouter une piste</a>';
+
         }
 
         return $html;
