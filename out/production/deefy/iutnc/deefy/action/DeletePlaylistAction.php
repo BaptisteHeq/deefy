@@ -24,7 +24,7 @@ class DeletePlaylistAction extends Action {
             $html .= '<b>pas de playlist</b>';
         } else {
             unset($_SESSION['playlist']);
-            $html .= '<b>Playlist supprimee</b>';
+            $html .= '<b> Playlist supprimee</b>';
         }
         return $html;
     }
