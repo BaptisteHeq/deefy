@@ -3,6 +3,7 @@
 namespace iutnc\deefy\render;
 
 use \iutnc\deefy\audio\lists\AudioList;
+use \iutnc\deefy\audio\tracks\PodcastTrack;
 
 class AudioListRenderer implements Renderer {
     private AudioList $audioList;
@@ -18,7 +19,11 @@ class AudioListRenderer implements Renderer {
 
 
         foreach ($this->audioList->pistes as $piste) {
-            $r = new AlbumTrackRenderer($piste);
+            if ($piste instanceof PodcastTrack) {
+                $r = new PodcastRenderer($piste);
+            } else {
+                $r = new AlbumTrackRenderer($piste);
+            }
             $html .= "<li>" . $r->render($selector) . "</li>\n";
         }
 

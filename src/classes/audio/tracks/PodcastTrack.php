@@ -3,8 +3,9 @@
 namespace iutnc\deefy\audio\tracks;
 
 class PodcastTrack extends AudioTrack {
-    private string $auteur;
-    private string $date;
+    private string $auteur='';
+    private string $date='';
+    private int $numeroEpisode=0;
 
     public function __construct(string $titre, string $nomFichier) {
         parent::__construct($titre, $nomFichier);
@@ -27,6 +28,10 @@ class PodcastTrack extends AudioTrack {
 
     public function setDate($d): void {
         $this->date = $d;
+    }
+
+    public function setNumeroEpisode($n): void {
+        $this->numeroEpisode = $n;
     }
 
 

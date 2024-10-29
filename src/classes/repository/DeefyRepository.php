@@ -75,22 +75,41 @@ Les playlists ne contiennent pas les pistes. */
         string $type,
         string $artiste,
         string $album,
-        int $annee
+        int $annee,
+        string $date
     ): int {
         // Insérer la piste dans la table `track`
-        $sql = "INSERT INTO track (titre, genre, duree, filename, type, artiste_album, titre_album, annee_album) 
-            VALUES (:titre, :genre, :duree, :nomFichier, :type, :artiste, :album, :annee)";
+        $sql = "INSERT INTO track (titre, genre, duree, filename, type, artiste_album, titre_album, annee_album,auteur_podcast,date_posdcast) 
+            VALUES (:titre, :genre, :duree, :nomFichier, :type, :artiste, :album, :annee, :auteur, :date)";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([
-            ':titre' => $titre,
-            ':genre' => $genre,
-            ':duree' => $duree,
-            ':nomFichier' => $nomFichier,
-            ':type' => $type,
-            ':artiste' => $artiste,
-            ':album' => $album,
-            ':annee' => $annee
-        ]);
+        if ($type === 'P') {
+            $stmt->execute([
+                ':titre' => $titre,
+                ':genre' => $genre,
+                ':duree' => $duree,
+                ':nomFichier' => $nomFichier,
+                ':type' => $type,
+                ':artiste' => NULL,
+                ':album' => NULL,
+                ':annee' => NULL,
+                ':auteur' => $artiste,
+                ':date' => $date
+            ]);
+        } else {
+            $stmt->execute([
+                ':titre' => $titre,
+                ':genre' => $genre,
+                ':duree' => $duree,
+                ':nomFichier' => $nomFichier,
+                ':type' => $type,
+                ':artiste' => $artiste,
+                ':album' => $album,
+                ':annee' => $annee,
+                ':auteur' => NULL,
+                ':date' => NULL
+            ]);
+        }
+
 
         // Récupérer l'ID de la piste insérée
         return (int)$this->pdo->lastInsertId();

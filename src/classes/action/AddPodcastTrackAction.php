@@ -5,7 +5,7 @@ namespace iutnc\deefy\action;
 use iutnc\deefy\audio\tracks\AlbumTrack;
 use iutnc\deefy\render\AudioListRenderer;
 use iutnc\deefy\repository\DeefyRepository;
-use iutnc\deefy\audio\lists\AudioList;
+use iutnc\deefy\audio\tracks\PodcastTrack;
 
 class AddPodcastTrackAction extends Action {
 
@@ -16,36 +16,50 @@ class AddPodcastTrackAction extends Action {
             $html .= <<<HTML
             <h2>Ajouter une piste à la playlist</h2>
             <form method="post" action="?action=add-track" enctype="multipart/form-data">
-                <label for="track_title">Titre de la piste :</label>
-                <input type="text" id="track_title" name="track_title" required><br>
-
-                <label for="type">Type :</label>
-                <input type="radio" id="album" name="type" required>album</input> 
-                <input type="radio" id="podcast" name="type" required>podcast</input> <br>
-
-                <label for="artist">Artiste :</label>
+            <label for="track_title">Titre de la piste :</label>
+            <input type="text" id="track_title" name="track_title" required><br>
+            <label for="type">Type :</label>
+            <input type="radio" id="type_album" name="type" value="A" required onchange="choix()"> Album
+            <input type="radio" id="type_podcast" name="type" value="P" required onchange="choix()"> Podcast
+            <br>
+            <div id="defaut">
+                <label for="artist">Artiste/Auteur :</label>
                 <input type="text" id="artist" name="artist" required><br>
-
-                <label for="album">Album  :</label>
-                <input type="text" id="album" name="album" ><br>
-
-                <label for="year">Année :</label>
-                <input type="number" id="year" name="year" required><br>
-                
                 <label for="duree">Durée :</label>
                 <input type="number" id="duree" name="duree" required><br>
-                
-                <label for="genre">genre :</label>
+                <label for="genre">Genre :</label>
                 <input type="text" id="genre" name="genre" required><br>
-                
-                <label for="date">Date (podcast) :</label>
-                
-                
+            </div>
+            <!-- Section pour Album -->
+            <div id="infosAlbum" style="display: none;">
+                <p>Informations spécifiques à l'album</p>
+                <label for="album">Album :</label>
+                <input type="text" id="album" name="album"><br>
+                <label for="year">Année :</label>
+                <input type="number" id="year" name="year" value=0><br>
+            </div>
+            <!-- Section pour Podcast -->
+            <div id="infosPodcast" style="display: none;">
+                <p>Informations spécifiques au podcast</p>
+                <label for="date">Date du podcast :</label>
+                <input type="date" id="date" name="date"><br>
+            </div>
+            <label for="file">Fichier audio :</label>
+            <input type="file" name="userfile" accept="audio/mpeg" required><br>
 
-                <button type="submit">Ajouter la piste</button>
-                
-                <input type="file" name="userfile"  accept="audio/mpeg" required>
+            <button type="submit">Ajouter la piste</button>
             </form>
+            <script>
+            function choix() {
+            const estAlbum = document.getElementById('type_album').checked;
+            const estPodcast = document.getElementById('type_podcast').checked;
+            
+            // Affiche ou masque les champs spécifiques en fonction du type sélectionné
+            document.getElementById('infosAlbum').style.display = estAlbum ? 'block' : 'none';
+            document.getElementById('infosPodcast').style.display = estPodcast ? 'block' : 'none';
+            }
+            </script>
+
 
             HTML;
         /* 4. Upload de fichiers audio
@@ -72,6 +86,7 @@ aléatoirement.
                 $genre = filter_var($_POST['genre'], FILTER_SANITIZE_STRING);
                 $type = filter_var($_POST['type'], FILTER_SANITIZE_STRING);
                 $duree = filter_var($_POST['duree'], FILTER_SANITIZE_NUMBER_INT);
+                $date = filter_var($_POST['date'], FILTER_SANITIZE_STRING);
                 if (substr($_FILES['userfile']['name'],-4) !== '.mp3' || $_FILES['userfile']['type'] !== 'audio/mpeg') {
                     $html .= '<b>Le fichier n\'est pas un fichier audio mp3.</b>';
                     return $html;
@@ -81,20 +96,40 @@ aléatoirement.
                 }
 
 
-                $r  =  DeefyRepository::getInstance();
-                $track_id = $r -> saveTrack($track_title, $filename, $duree, $genre, $type, $artist, $album, $year);
-                $id = $playlist->getId();
-                $pos = $r -> addTrackToPlaylist($track_id, $id);
+                if ($type === 'P') {
 
-                $track = new AlbumTrack($track_title, $filename, $album, $pos);
-                $track->setDuree($duree);
-                $track->setArtiste($artist);
-                $track->setAnnee($year);
-                $track->setGenre($genre);
+                    $r = DeefyRepository::getInstance();
+                    $track_id = $r->saveTrack($track_title, $filename, $duree, $genre, $type, $artist, $album, $year, $date);
+                    $id = $playlist->getId();
+                    $pos = $r->addTrackToPlaylist($track_id, $id);
 
-                $playlist->ajouterPiste($track);
+                    $track = new PodcastTrack($track_title, $filename);
+                    $track->setAuteur($artist);
+                    $track->setDuree($duree);
+                    $track->setDate($date);
+                    $track->setGenre($genre);
+                    $track->setNumeroEpisode($pos);
 
-                $_SESSION['playlist'] = serialize($playlist);
+                    $playlist->ajouterPiste($track);
+
+                    $_SESSION['playlist'] = serialize($playlist);
+                } elseif ($type === 'A') {
+                    $r = DeefyRepository::getInstance();
+                    $track_id = $r->saveTrack($track_title, $filename, $duree, $genre, $type, $artist, $album, $year,$date);
+                    $id = $playlist->getId();
+                    $pos = $r->addTrackToPlaylist($track_id, $id);
+
+                    $track = new AlbumTrack($track_title, $filename, $album, $pos);
+                    $track->setDuree($duree);
+                    $track->setArtiste($artist);
+                    $track->setAnnee($year);
+                    $track->setGenre($genre);
+
+                    $playlist->ajouterPiste($track);
+
+                    $_SESSION['playlist'] = serialize($playlist);
+                }
+
 
 
                 $renderer = new AudioListRenderer($playlist);
