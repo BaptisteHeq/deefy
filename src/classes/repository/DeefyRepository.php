@@ -67,23 +67,57 @@ Les playlists ne contiennent pas les pistes. */
         return (int)$this->pdo->lastInsertId();
     }
     /* Sauvegarder une piste ;*/
-    public function saveTrack(string $titre, string $nomFichier, int $duree,string $genre,string $type,string $artiste,string $album,int $annee , int $idPlaylist): void
-    {
-        $sql = "INSERT INTO track (titre, genre, duree, filename, type,artiste_album, titre_album, annee_album) VALUES ( :titre, :genre, :duree, :nomFichier, :type, :artiste, :album, :annee)";
+    public function saveTrack(
+        string $titre,
+        string $nomFichier,
+        int $duree,
+        string $genre,
+        string $type,
+        string $artiste,
+        string $album,
+        int $annee
+    ): int {
+        // Insérer la piste dans la table `track`
+        $sql = "INSERT INTO track (titre, genre, duree, filename, type, artiste_album, titre_album, annee_album) 
+            VALUES (:titre, :genre, :duree, :nomFichier, :type, :artiste, :album, :annee)";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':titre' => $titre, ':genre' => $genre, ':duree' => $duree, ':nomFichier' => $nomFichier, ':type' => $type, ':artiste' => $artiste, ':album' => $album, ':annee' => $annee]);
-        $sql2 = "INSERT INTO playlist2track (id_pl, id_track, no_piste_dans_liste) VALUES (:idPlaylist, :idTrack, :no_piste_dans_liste)";
-        $stmt2 = $this->pdo->prepare($sql2);
-        $stmt2->execute([':idPlaylist' => $idPlaylist, ':idTrack' => $this->pdo->lastInsertId(), ':no_piste_dans_liste' => 1]);
+        $stmt->execute([
+            ':titre' => $titre,
+            ':genre' => $genre,
+            ':duree' => $duree,
+            ':nomFichier' => $nomFichier,
+            ':type' => $type,
+            ':artiste' => $artiste,
+            ':album' => $album,
+            ':annee' => $annee
+        ]);
+
+        // Récupérer l'ID de la piste insérée
+        return (int)$this->pdo->lastInsertId();
     }
 
-    /*Ajouter une  piste existante à une playlist */
-    public function addTrackToPlaylist(int $idPiste, int $idPlaylist): void
-    {
-        $sql = "INSERT INTO playlist_piste (idPlaylist, idPiste) VALUES (:idPlaylist, :idPiste)";
+    public function addTrackToPlaylist(int $idTrack, int $idPlaylist): int {
+        // Récupérer la position actuelle maximale dans la playlist
+        $sqlMaxPosition = "SELECT MAX(no_piste_dans_liste) FROM playlist2track WHERE id_pl = :idPlaylist";
+        $stmtMax = $this->pdo->prepare($sqlMaxPosition);
+        $stmtMax->execute([':idPlaylist' => $idPlaylist]);
+
+        // Si une position existe, on incrémente de 1, sinon on commence à 1
+        $currentMaxPosition = $stmtMax->fetchColumn();
+        $newPosition = $currentMaxPosition ? $currentMaxPosition + 1 : 1;
+
+        // Insérer la piste dans la table `playlist2track` avec la position calculée
+        $sql = "INSERT INTO playlist2track (id_pl, id_track, no_piste_dans_liste) 
+            VALUES (:idPlaylist, :idTrack, :no_piste_dans_liste)";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':idPlaylist' => $idPlaylist, ':idPiste' => $idPiste]);
+        $stmt->execute([
+            ':idPlaylist' => $idPlaylist,
+            ':idTrack' => $idTrack,
+            ':no_piste_dans_liste' => $newPosition
+        ]);
+        return $newPosition;
     }
+
     /*Récupérer la liste des pistes d’une playlist ; */
     public function getTracksFromPlaylist(int $idPlaylist): array
     {
@@ -129,7 +163,39 @@ Les playlists ne contiennent pas les pistes. */
     /*Supprimer une playlist ; */
     public function deletePlaylist(int $id): void
     {
+        // nombre de pistes dans la playlist
+        $sql="SELECT id_track FROM playlist2track WHERE id_pl = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        $tracks = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($tracks as $track) {
+            $this->deleteTrack($track['id_track']);
+        }
+
+
+        $sql = "DELETE FROM playlist2track WHERE id_pl = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+
+
         $sql = "DELETE FROM playlist WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+    }
+
+    public function deleteTrack(int $id): void
+    {
+        $sql = "DELETE FROM playlist2track WHERE id_track = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+
+        $sql="SELECT filename FROM track WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        $filename = $stmt->fetch(PDO::FETCH_ASSOC);
+        unlink('./audio/'.$filename['filename']);
+
+        $sql = "DELETE FROM track WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':id' => $id]);
     }

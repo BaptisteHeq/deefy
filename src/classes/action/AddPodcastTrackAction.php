@@ -81,14 +81,19 @@ aléatoirement.
                 }
 
 
-                $track = new AlbumTrack($track_title, $filename, $album, $year);
+                $r  =  DeefyRepository::getInstance();
+                $track_id = $r -> saveTrack($track_title, $filename, $duree, $genre, $type, $artist, $album, $year);
+                $id = $playlist->getId();
+                $pos = $r -> addTrackToPlaylist($track_id, $id);
+
+                $track = new AlbumTrack($track_title, $filename, $album, $pos);
                 $track->setDuree($duree);
+                $track->setArtiste($artist);
+                $track->setAnnee($year);
+                $track->setGenre($genre);
 
                 $playlist->ajouterPiste($track);
 
-                $r  =  DeefyRepository::getInstance();
-                $r -> saveTrack($track_title, $filename, $duree, $genre, $type, $artist, $album, $year, $playlist->getId());
-                $id = $playlist->getId();
                 $_SESSION['playlist'] = serialize($playlist);
 
 
