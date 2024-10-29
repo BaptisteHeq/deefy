@@ -15,13 +15,7 @@ session_start();
 $action = $_GET['action'] ?? 'default';
 $dispatcher = new Dispatcher($action);
 $dispatcher->run();
-/*
-$r  =  DeefyRepository::getInstance();
-$pl = $r->getPlaylistById(1);
-echo '<br> Liste des tracks de la playlist 1 <br>';
-$r = new AudioListRenderer($pl);
-echo $r->render(Renderer::COMPACT);
-*/
+
 
 
 

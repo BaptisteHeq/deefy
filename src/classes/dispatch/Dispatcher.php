@@ -81,6 +81,7 @@ class Dispatcher
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Deefy</title>
 </head>
 <body>
@@ -88,10 +89,10 @@ class Dispatcher
     <nav>
         <ul>
             <li><a href="?action=default">Accueil</a></li>
-            <li><a href="?action=playlist">Playlist</a></li>
-            <li><a href="?action=add-playlist">Ajouter Playlist</a></li>
-            <li><a href="?action=add-user">Ajouter un utilisateur</a></li>
-            <li><a href="?action=display-list-playlist">Liste des playlists</a></li>
+            <li><a href="?action=playlist">Playlist courante</a></li>
+            <li><a href="?action=add-playlist">Créer une Playlist</a></li>
+            <li><a href="?action=display-list-playlist">Mes Playlists</a></li>
+            <li><a href="?action=add-user">S'inscrire</a></li>
         </ul>
     </nav>
     <main>

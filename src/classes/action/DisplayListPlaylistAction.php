@@ -13,9 +13,9 @@ class DisplayListPlaylistAction extends Action {
         $html = '<b>Liste des Playlists</b>';
         $r = DeefyRepository::getInstance();
         $pl = $r->getListPlaylist();
-        $html .= '<ul>';
+        $html .= '<ul class="mesPl" >';
         foreach ($pl as $p) {
-            $html .= '<li><a href="?action=playlist&playlist_id='.$p['id'].'">' . $p['nom'] . '</a></li>';
+            $html .= '<li class="mesPl" ><a class="mesPl" href="?action=playlist&playlist_id='.$p['id'].'">' . $p['nom'] . '</a></li>';
         }
         $html .= '</ul>';
 
