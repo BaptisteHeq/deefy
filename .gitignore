@@ -1,14 +1,15 @@
-# Default ignored files
+# Ignorer les dossiers de configuration d'IDE (JetBrains, par exemple PhpStorm)
+/.idea/
 /shelf/
-/.idea/workspace.xml
-# Editor-based HTTP Client requests
+/workspace.xml
 /httpRequests/
-# Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
 
+# Fichiers spécifiques de configuration et de dépendances
 db.config.ini
-vendor/composer/
+vendor/
 composer.lock
+
+# Ignorer les fichiers de sortie ou de compilation
 out/
-.idea/
