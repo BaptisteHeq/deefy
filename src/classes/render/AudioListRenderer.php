@@ -14,8 +14,8 @@ class AudioListRenderer implements Renderer {
 
     public function render(int $selector = Renderer::COMPACT): string {
         //ignore le selecteur
-        $html = "<h2>" . htmlspecialchars($this->audioList->nom) . "</h2>\n";
-        $html .= "<ul>\n";
+        $html = "<div class='pl'><h2 id='nom'>" . htmlspecialchars($this->audioList->nom) . "</h2>\n";
+        $html .= "<ul class='pl'>\n";
 
 
         foreach ($this->audioList->pistes as $piste) {
@@ -24,12 +24,12 @@ class AudioListRenderer implements Renderer {
             } else {
                 $r = new AlbumTrackRenderer($piste);
             }
-            $html .= "<li>" . $r->render($selector) ."<a href='?action=delete-track&track_id=".$piste->id."'>supprimer track</a>" ."</li>\n";
+            $html .= "<li class='pl'>" . $r->render($selector) ."<a id='del' class='pl' href='?action=delete-track&track_id=".$piste->id."'>supprimer track</a>" ."</li>\n";
         }
 
         $html .= "</ul>\n";
-        $html .= "<p><strong>Nombre de pistes :</strong> " . $this->audioList->nbPistes . "</p>\n";
-        $html .= "<p><strong>Durée totale :</strong> " . $this->audioList->dureeTotale . " secondes</p>\n";
+        $html .= "<p class='pl'><strong>Nombre de pistes :</strong> " . $this->audioList->nbPistes . "</p>\n";
+        $html .= "<p class='pl'><strong>Durée totale :</strong> " . $this->audioList->dureeTotale . " secondes</p></div>\n";
 
         return $html;
     }

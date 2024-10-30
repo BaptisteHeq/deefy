@@ -26,14 +26,16 @@ class DisplayPlaylistAction extends Action {
         if (! isset($_SESSION['playlist'])) {
             $html .= '<b>pas de playlist</b>';
         } else {
-            $html .= '<a href="?action=delete-playlist">Supprimer la playlist</a>';
+
+            //ajouter un lien pour ajouter une track
+            $html .= '<a id="adj" href="?action=add-track">Ajouter une piste</a><br>';
             $pl = unserialize($_SESSION['playlist']);
             $r = new AudioListRenderer($pl);
             $html .= $r->render(Renderer::COMPACT);
 
-            //ajouter un lien pour ajouter une track
-            $html .= '<a href="?action=add-track">Ajouter une piste</a> <br>';
+
             //ajouter un lien pour supprimer la playlist
+            $html .= '<a id="del" href="?action=delete-playlist">Supprimer la playlist</a>';
 
         }
 
