@@ -11,9 +11,11 @@ use iutnc\deefy\action\DeletePlaylistAction;
 use iutnc\deefy\action\AddUserAction;
 use iutnc\deefy\action\DisplayListPlaylistAction;
 use iutnc\deefy\action\DeleteTrackAction;
+use iutnc\deefy\action\SigninAction;
 use iutnc\deefy\render\AudioListRenderer;
 use iutnc\deefy\render\Renderer;
 use iutnc\deefy\repository\DeefyRepository;
+
 
 class Dispatcher
 {
@@ -66,6 +68,10 @@ class Dispatcher
                 $action = new DeleteTrackAction();
                 $html = $action->execute();
                 break;
+            case 'sign-in':
+                $action = new SigninAction();
+                $html = $action->execute();
+                break;
 
             default:
                 $action = new DefaultAction();
@@ -81,12 +87,18 @@ class Dispatcher
         $playlistname = "aucune playlist en session";
 
         if (isset($_SESSION['playlist'])) {
-            $html .= '<b>pas de playlist</b>';
-
             $pl = unserialize($_SESSION['playlist']);
             $playlistname = $pl->getName();
 
         }
+
+        //récupération du nom de l'utilisateur
+        $nom = "pas connecté";
+
+        if (isset($_SESSION['user']['id'])) {
+            $nom = $_SESSION['user']['id'];
+        }
+
         echo <<<HTML
 
 
@@ -106,8 +118,9 @@ class Dispatcher
         </div>
         <h1 onclick="window.location.href='?action=display-list-playlist';">Deefy</h1>
         <div class="auth-buttons">
-            <button>Connexion</button>
-            <button>Enregistrer</button>
+            <button onclick="window.location.href='?action=sign-in';">Connexion</button>
+            <button onclick="window.location.href='?action=add-user';">Enregistrer</button>
+            <p>$nom</p>
         </div>
     </header>
 
