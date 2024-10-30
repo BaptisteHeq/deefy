@@ -11,6 +11,9 @@ use iutnc\deefy\action\DeletePlaylistAction;
 use iutnc\deefy\action\AddUserAction;
 use iutnc\deefy\action\DisplayListPlaylistAction;
 use iutnc\deefy\action\DeleteTrackAction;
+use iutnc\deefy\render\AudioListRenderer;
+use iutnc\deefy\render\Renderer;
+use iutnc\deefy\repository\DeefyRepository;
 
 class Dispatcher
 {
@@ -74,30 +77,76 @@ class Dispatcher
 
     public function renderPage(string $html): void
     {
+        //récupération du nom de la playlist en session
+        $playlistname = "aucune playlist en session";
+
+        if (isset($_SESSION['playlist'])) {
+            $html .= '<b>pas de playlist</b>';
+
+            $pl = unserialize($_SESSION['playlist']);
+            $playlistname = $pl->getName();
+
+        }
         echo <<<HTML
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
     <title>Deefy</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Deefy</h1>
-    <nav>
-        <ul>
-            <li><a href="?action=default">Accueil</a></li>
-            <li><a href="?action=playlist">Playlist courante</a></li>
-            <li><a href="?action=add-playlist">Créer une Playlist</a></li>
-            <li><a href="?action=display-list-playlist">Mes Playlists</a></li>
-            <li><a href="?action=add-user">S'inscrire</a></li>
-        </ul>
-    </nav>
+    <!-- Header -->
+    <header>
+        <div class="espace-logo">
+            <img src="img/deefywhite.png" class="logo">
+        </div>
+        <h1 onclick="window.location.href='?action=display-list-playlist';">Deefy</h1>
+        <div class="auth-buttons">
+            <button>Connexion</button>
+            <button>Enregistrer</button>
+        </div>
+    </header>
+
+    <!-- Gestion des playlists -->
+    <div class="playlist-container">
+        <button id="playlist-toggle">Gestion Playlist</button>
+        <div class="playlist-options">
+            <button onclick="window.location.href='?action=add-playlist';">Ajouter Playlist</button>
+            <button onclick="window.location.href='?action=delete-playlist';">Supprimer Playlist</button>
+            <button onclick="window.location.href='?action=add-track';">Ajouter Musique</button>
+        </div>
+    </div>
+
+    <!-- Contenu principal (géré par PHP) -->
     <main>
         $html
     </main>
+
+    <!-- Lecteur audio et contrôles -->
+    <footer>
+        <div class="info-playlist">
+            <h2 onclick="window.location.href='?action=playlist';">$playlistname</h2>
+        </div>
+        <div class="name-audio">
+            <h2>Nom de la musique</h2>
+        </div>
+        <div class="audio-player">
+            <audio controls>
+                <source src="song.mp3" type="audio/mp3">
+                Votre navigateur ne supporte pas la balise audio.
+            </audio>
+        </div>
+        <div class="navigation-buttons">
+            <img src="img/gauche.png" alt="Précédent" class="nav-btn">
+            <img src="img/droit.png" alt="Suivant" class="nav-btn">
+        </div>
+    </footer>
+
+    <script src="script.js"></script> <!-- Ajout d'un fichier JavaScript -->
 </body>
 </html>
 HTML;

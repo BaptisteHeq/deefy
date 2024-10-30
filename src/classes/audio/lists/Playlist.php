@@ -55,4 +55,8 @@ class Playlist extends AudioList {
         ]);
     }
 
+    public function getname(): string {
+        return $this->nom;
+    }
+
 }
