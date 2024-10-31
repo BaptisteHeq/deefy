@@ -33,6 +33,7 @@ class SigninAction extends Action {
 
                 //on recupère les playlists de l'utilisateur
                 $u = new \iutnc\deefy\user\User($e, $p,1);
+                $_SESSION['u'] = serialize($u);
                 $t =  $u->getPlaylists();
                 $res=<<<start
                     <h3>Connexion réussite pour $e</h3>

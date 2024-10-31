@@ -237,6 +237,21 @@ Les playlists ne contiennent pas les pistes. */
         return new Playlist($playlist['nom'],$tracks);
     }
 
+    public function linkPlaylistWithUser($idPlaylist, $idUser): void
+    {
+        $sql = "INSERT INTO user2playlist (id_user, id_pl) VALUES (:idUser, :idPlaylist)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':idUser' => $idUser, ':idPlaylist' => $idPlaylist]);
+    }
+
+    public function getIdUser($email): int
+    {
+        $sql = "SELECT id FROM user WHERE email = :email";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':email' => $email]);
+        return $stmt->fetchColumn();
+    }
+
 }
 
 

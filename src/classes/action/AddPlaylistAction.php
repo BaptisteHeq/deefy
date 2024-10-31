@@ -10,6 +10,11 @@ use iutnc\deefy\repository\DeefyRepository;
 class AddPlaylistAction extends Action {
 
     public function execute(): string {
+
+        if(!isset($_SESSION['u'])){
+            return 'Connectez-vous pour ajouter une playlist!';
+        }
+
         $html = '';
 
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -33,6 +38,10 @@ class AddPlaylistAction extends Action {
             $r = DeefyRepository::getInstance();
             $id =$r->savePlaylist($playlist_name);
             $playlist->setId($id);
+
+            //relier a user
+            $iduser = $r->getIdUser($_SESSION['user']['id']);
+            $r->linkPlaylistWithUser($id, $iduser);
 
             $_SESSION['playlist'] = serialize($playlist);
 

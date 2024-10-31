@@ -10,6 +10,13 @@ use iutnc\deefy\audio\tracks\PodcastTrack;
 class AddPodcastTrackAction extends Action {
 
     public function execute(): string {
+
+        if(!isset($_SESSION['u'])){
+            return 'Vous devez être connecté pour ajouter une piste';
+        }
+        if(!isset($_SESSION['playlist'])){
+            return 'Vous devez selectionner une playlist pour ajouter une piste';
+        }
         $html = '';
 
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {

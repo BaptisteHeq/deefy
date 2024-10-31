@@ -12,6 +12,7 @@ use iutnc\deefy\action\AddUserAction;
 use iutnc\deefy\action\DisplayListPlaylistAction;
 use iutnc\deefy\action\DeleteTrackAction;
 use iutnc\deefy\action\SigninAction;
+use iutnc\deefy\action\DisplayPlaylistIdAction;
 use iutnc\deefy\render\AudioListRenderer;
 use iutnc\deefy\render\Renderer;
 use iutnc\deefy\repository\DeefyRepository;
@@ -42,6 +43,10 @@ class Dispatcher
         switch ($this->action) {
             case 'playlist':
                 $action = new DisplayPlaylistAction();
+                $html = $action->execute();
+                break;
+            case 'playlist-id':
+                $action = new DisplayPlaylistIdAction();
                 $html = $action->execute();
                 break;
             case 'add-playlist':

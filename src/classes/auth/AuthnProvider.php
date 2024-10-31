@@ -50,4 +50,21 @@ class AuthnProvider
         }
         return $res;
     }
+
+    public static function checkAccess(int $id):bool{
+        $res=false;
+
+        $bd = \iutnc\deefy\db\ConnectionFactory::makeConnection();
+        $query = "SELECT u.email as email from user u inner join user2playlist p on u.id = p.id_user where id_pl = ? ";
+        $prep = $bd->prepare($query);
+        $prep->bindParam(1,$id);
+        $bool = $prep->execute();
+        $d = $prep->fetchall(PDO::FETCH_ASSOC);
+        if($bool && sizeof($d)>0){
+            if($d[0]['email'] === $_SESSION['user']['id']||$_SESSION['user']['role']===100){
+                $res=true;
+            }
+        }
+        return $res;
+    }
 }
