@@ -252,6 +252,14 @@ Les playlists ne contiennent pas les pistes. */
         return $stmt->fetchColumn();
     }
 
+    public function getUserPlaylists($email): array
+    {
+        $sql = "SELECT p.id, p.nom FROM user u INNER JOIN user2playlist u2 ON u.id = u2.id_user INNER JOIN playlist p ON u2.id_pl = p.id WHERE u.email = :email";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':email' => $email]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }
 
 

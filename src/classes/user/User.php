@@ -1,5 +1,6 @@
 <?php
 namespace iutnc\deefy\user;
+use iutnc\deefy\repository\DeefyRepository;
 use PDO;
 use iutnc\deefy\audio\lists\Playlist as Playlist;
 class User{
@@ -13,8 +14,9 @@ class User{
         $this->role = $r;
     }
 
-    public function getPlaylists(){
-        $bd = \iutnc\deefy\db\ConnectionFactory::makeConnection();
+    public function getPlaylists() : array{
+        $r = DeefyRepository::getInstance();
+        $bd = $r->getBd();
 
         $query ="SELECT p.nom as nom, p.id as idp from user u inner join user2playlist u2 on u.id = u2.id_user
                                         inner join playlist p on u2.id_pl = p.id
@@ -29,6 +31,10 @@ class User{
         }
 
         return $tab;
+    }
+
+    public function getEmail() : string{
+        return $this->email;
     }
 
 }

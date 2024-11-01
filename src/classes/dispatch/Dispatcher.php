@@ -113,7 +113,7 @@ class Dispatcher
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deefy</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
     <!-- Header -->
@@ -133,9 +133,12 @@ class Dispatcher
     <div class="playlist-container">
         <button id="playlist-toggle">Gestion Playlist</button>
         <div class="playlist-options">
+            <button onclick="window.location.href='?action=playlist';">Playlist courante</button>
+            <!-- afficher les playlists de l'utilisateur -->
+            <button onclick="window.location.href='?action=display-list-playlist';">Mes playlists</button>
+            
             <button onclick="window.location.href='?action=add-playlist';">Ajouter Playlist</button>
-            <button onclick="window.location.href='?action=delete-playlist';">Supprimer Playlist</button>
-            <button onclick="window.location.href='?action=add-track';">Ajouter Musique</button>
+            
         </div>
     </div>
 
