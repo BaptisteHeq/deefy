@@ -5,6 +5,7 @@ namespace iutnc\deefy\audio\lists;
 use iutnc\deefy\audio\tracks\AudioTrack;
 
 class Playlist extends AudioList {
+    private int $pisteCourante = 0;
     public function ajouterPiste(AudioTrack $piste): void {
         $this->pistes[] = $piste;
         $this->nbPistes++;
@@ -57,6 +58,16 @@ class Playlist extends AudioList {
 
     public function getname(): string {
         return $this->nom;
+    }
+
+    //fonction qui retourne une piste de la playlist dans l'ordre de la liste
+    public function getTrack(): AudioTrack {
+        $piste = $this->pistes[$this->pisteCourante];
+        $this->pisteCourante++;
+        if ($this->pisteCourante >= $this->nbPistes) {
+            $this->pisteCourante = 0;
+        }
+        return $piste;
     }
 
 }

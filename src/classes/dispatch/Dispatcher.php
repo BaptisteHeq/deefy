@@ -90,10 +90,12 @@ class Dispatcher
     {
         //récupération du nom de la playlist en session
         $playlistname = "aucune playlist en session";
+        $t = "aucune piste en session";
 
         if (isset($_SESSION['playlist'])) {
             $pl = unserialize($_SESSION['playlist']);
             $playlistname = $pl->getName();
+            $t = $pl->getTrack();
 
         }
 
@@ -153,11 +155,11 @@ class Dispatcher
             <h2 onclick="window.location.href='?action=playlist';">$playlistname</h2>
         </div>
         <div class="name-audio">
-            <h2>Nom de la musique</h2>
+            <h2>$t->titre</h2>
         </div>
         <div class="audio-player">
             <audio controls>
-                <source src="song.mp3" type="audio/mp3">
+                <source src='./audio/" . htmlspecialchars($t->nomFichier) . "' type='audio/mpeg'>
                 Votre navigateur ne supporte pas la balise audio.
             </audio>
         </div>
