@@ -61,7 +61,7 @@ class Playlist extends AudioList {
     }
 
     //fonction qui retourne une piste de la playlist dans l'ordre de la liste
-    public function getTrack(): AudioTrack {
+    public function getTrack(){
         $piste = $this->pistes[$this->pisteCourante];
         $this->pisteCourante++;
         if ($this->pisteCourante >= $this->nbPistes) {
