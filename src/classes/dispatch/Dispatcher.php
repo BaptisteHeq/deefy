@@ -12,7 +12,6 @@ use iutnc\deefy\action\AddUserAction;
 use iutnc\deefy\action\DisplayListPlaylistAction;
 use iutnc\deefy\action\DeleteTrackAction;
 use iutnc\deefy\action\SigninAction;
-use iutnc\deefy\action\DisplayPlaylistIdAction;
 use iutnc\deefy\render\AudioListRenderer;
 use iutnc\deefy\render\Renderer;
 use iutnc\deefy\repository\DeefyRepository;
@@ -43,10 +42,6 @@ class Dispatcher
         switch ($this->action) {
             case 'playlist':
                 $action = new DisplayPlaylistAction();
-                $html = $action->execute();
-                break;
-            case 'playlist-id':
-                $action = new DisplayPlaylistIdAction();
                 $html = $action->execute();
                 break;
             case 'add-playlist':
@@ -91,12 +86,17 @@ class Dispatcher
         //récupération du nom de la playlist en session
         $playlistname = "aucune playlist en session";
         $t = "aucune piste en session";
+        $fichier = "null";
+        $titre = "";
 
         if (isset($_SESSION['playlist'])) {
             $pl = unserialize($_SESSION['playlist']);
             $playlistname = $pl->getName();
             $t = $pl->getTrack();
-
+            if ($t != null){
+                $fichier = $t->nomFichier;
+                $titre = $t->titre;
+            }
         }
 
         //récupération du nom de l'utilisateur
@@ -155,11 +155,11 @@ class Dispatcher
             <h2 onclick="window.location.href='?action=playlist';">$playlistname</h2>
         </div>
         <div class="name-audio">
-            <h2>$t->titre</h2>
+            <h2>$titre</h2>
         </div>
         <div class="audio-player">
             <audio controls>
-                <source src='./audio/" . htmlspecialchars($t->nomFichier) . "' type='audio/mpeg'>
+                <source src='./audio/" . htmlspecialchars($fichier) . "' type='audio/mpeg'>
                 Votre navigateur ne supporte pas la balise audio.
             </audio>
         </div>
