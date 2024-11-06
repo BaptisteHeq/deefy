@@ -11,6 +11,10 @@ DeefyRepository::setConfig( 'db.config.ini' );
 
 session_start();
 
+
+if(!isset($_SESSION['idtrack']))
+    $_SESSION['idtrack'] = 1;
+
 $action = $_GET['action'] ?? 'default';
 $dispatcher = new Dispatcher($action);
 $dispatcher->run();

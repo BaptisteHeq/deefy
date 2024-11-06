@@ -73,4 +73,16 @@ class Playlist extends AudioList {
         return $piste;
     }
 
+    public function getTrackId($id){
+        if ($this->nbPistes === 0) {
+            return null;
+        }
+        $piste = $this->pistes[$id];
+        return $piste;
+    }
+
+    public function getNbTrack(){
+        return $this->nbPistes;
+    }
+
 }

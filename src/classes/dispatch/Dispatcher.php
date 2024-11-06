@@ -12,6 +12,8 @@ use iutnc\deefy\action\AddUserAction;
 use iutnc\deefy\action\DisplayListPlaylistAction;
 use iutnc\deefy\action\DeleteTrackAction;
 use iutnc\deefy\action\SigninAction;
+use iutnc\deefy\action\ForwardAction;
+use iutnc\deefy\action\BackwardAction;
 use iutnc\deefy\render\AudioListRenderer;
 use iutnc\deefy\render\Renderer;
 use iutnc\deefy\repository\DeefyRepository;
@@ -43,6 +45,14 @@ class Dispatcher
         switch ($this->action) {
             case 'playlist':
                 $action = new DisplayPlaylistAction();
+                $html = $action->execute();
+                break;
+            case 'forward':
+                $action = new ForwardAction();
+                $html = $action->execute();
+                break;
+            case 'backward':
+                $action = new BackwardAction();
                 $html = $action->execute();
                 break;
             case 'add-playlist':
@@ -97,9 +107,9 @@ class Dispatcher
         if (isset($_SESSION['playlist'])) {
             $pl = unserialize($_SESSION['playlist']);
             $playlistname = $pl->getName();
-            $t = $pl->getTrack();
+            $t = $pl->getTrackId($_SESSION['idtrack']);
             if ($t != null){
-                $fichier = $t->nomFichier;
+                $fichier = "./audio/" . $t->nomFichier;
                 $titre = $t->titre;
             }
         }
@@ -174,13 +184,13 @@ class Dispatcher
         </div>
         <div class="audio-player">
             <audio controls>
-                <source src='./audio/" . $fichier' type='audio/mpeg'>
+                <source src=$fichier type='audio/mpeg'>
                 Votre navigateur ne supporte pas la balise audio.
             </audio>
         </div>
         <div class="navigation-buttons">
-            <img src="img/gauche.png" alt="Précédent" class="nav-btn">
-            <img src="img/droit.png" alt="Suivant" class="nav-btn">
+            <img onclick="window.location.href='?action=backward';" src="img/gauche.png" alt="Précédent" class="nav-btn">
+            <img onclick="window.location.href='?action=forward';" src="img/droit.png" alt="Suivant" class="nav-btn">
         </div>
     </footer>
 
