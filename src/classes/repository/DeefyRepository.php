@@ -222,7 +222,8 @@ Les playlists ne contiennent pas les pistes. */
         $stmt->execute([':id' => $id]);
         $filename = $stmt->fetch(PDO::FETCH_ASSOC);
         try {
-            unlink('./audio/'.$filename['filename']);
+            if(is_file('./audio/'.$filename['filename']))
+                unlink('./audio/'.$filename['filename']);
         } catch (Exception $e) {
             echo 'Exception reçue : ',  $e->getMessage(), "\n";
         }
