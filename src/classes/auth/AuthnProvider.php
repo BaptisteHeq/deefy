@@ -4,67 +4,46 @@ namespace iutnc\deefy\auth;
 
 
 use iutnc\deefy\exception\AuthException as AuthException;
+use iutnc\deefy\repository\DeefyRepository;
 use PDO;
 
 class AuthnProvider
 {
     public static function signin(string $e, string $p): bool
     {
-        $bd = \iutnc\deefy\db\ConnectionFactory::makeConnection();
-        $query = "select passwd, role from User where email = ? ";
-        $prep = $bd->prepare($query);
-        $prep->bindParam(1,$e);
-        $bool = $prep->execute();
-        $data =$prep->fetch(PDO::FETCH_ASSOC);
+        $r = DeefyRepository::getInstance();
+        $data = $r->searchHashRole($e);
         $hash=$data['passwd'];
-        if (!password_verify($p, $hash)&&$bool)throw new AuthException("Mot de passe Incorrect");
+        if (!password_verify($p, $hash))throw new AuthException("Mot de passe Incorrect");
         $_SESSION['user']['id']=$e;
         $_SESSION['user']['role']=$data['role'];;
         return true;
     }
 
     public static function register(string $e, string $p):String{
-        $res = "Echec inscription";
+        $html = "Echec inscription";
         $minimumLength = 10;
 
         //verification compte
-        $bd = \iutnc\deefy\db\ConnectionFactory::makeConnection();
-        $query = "select passwd from User where email = ? ";
-        $prep = $bd->prepare($query);
-        $prep->bindParam(1,$e);
-        $prep->execute();
-        $d = $prep->fetchall(PDO::FETCH_ASSOC);
-        if((strlen($p) >= $minimumLength)&&(sizeof($d)==0)){
-            //hash the password
-            $hash = password_hash($p, PASSWORD_DEFAULT,['cost'=>10]);
-
-            //prepare the insert
-            $insert = "INSERT into user (email, passwd) values(?,?)";
-            $prep = $bd->prepare($insert);
-            $prep->bindParam(1,$e);
-            $prep->bindParam(2,$hash);
-            $bool = $prep->execute();
-            if($bool){
-                $res = "inscription Reussite";
-            }
+        $r = DeefyRepository::getInstance();
+        $test = $r->checkIfRegistered($e);
+        if($test){
+            return "Compte déjà existant";
         }
-        return $res;
+        if(!(strlen($p) >= $minimumLength)){
+            return "mot de passe trop petit";
+        }
+
+        //hash the password
+        $hash = password_hash($p, PASSWORD_DEFAULT,['cost'=>10]);
+
+        $bool = $r->register($e, $hash);
+        if($bool){
+            $html = "inscription Reussite";
+        }
+
+        return $html;
     }
 
-    public static function checkAccess(int $id):bool{
-        $res=false;
 
-        $bd = \iutnc\deefy\db\ConnectionFactory::makeConnection();
-        $query = "SELECT u.email as email from user u inner join user2playlist p on u.id = p.id_user where id_pl = ? ";
-        $prep = $bd->prepare($query);
-        $prep->bindParam(1,$id);
-        $bool = $prep->execute();
-        $d = $prep->fetchall(PDO::FETCH_ASSOC);
-        if($bool && sizeof($d)>0){
-            if($d[0]['email'] === $_SESSION['user']['id']||$_SESSION['user']['role']===100){
-                $res=true;
-            }
-        }
-        return $res;
-    }
 }

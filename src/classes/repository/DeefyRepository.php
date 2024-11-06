@@ -5,6 +5,7 @@ namespace iutnc\deefy\repository;
 use Exception;
 use iutnc\deefy\audio\lists\Playlist;
 use iutnc\deefy\audio\tracks\AlbumTrack;
+use iutnc\deefy\exception\AuthException as AuthException;
 use PDO;
 use iutnc\deefy\audio\tracks\PodcastTrack;
 
@@ -258,6 +259,35 @@ Les playlists ne contiennent pas les pistes. */
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':email' => $email]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function searchHashRole($email){
+        $sql = "SELECT passwd, role FROM user WHERE email = :email";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':email' => $email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function searchHash($email){
+        $sql = "SELECT passwd FROM user WHERE email = :email";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':email' => $email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function checkIfRegistered($email): bool
+    {
+        $sql = "SELECT COUNT(*) FROM user WHERE email = :email";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':email' => $email]);
+        return $stmt->fetchColumn() > 0;
+    }
+
+    public function register($e, $hash): bool
+    {
+        $sql = "INSERT INTO user (email, passwd) VALUES (:email, :hash)";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([':email' => $e, ':hash' => $hash]);
     }
 
 }

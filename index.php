@@ -8,7 +8,6 @@ use iutnc\deefy\render\AudioListRenderer;
 use iutnc\deefy\render\Renderer;
 use iutnc\deefy\repository\DeefyRepository;
 DeefyRepository::setConfig( 'db.config.ini' );
-\iutnc\deefy\db\ConnectionFactory::setConfig('db.config.ini');
 
 session_start();
 
