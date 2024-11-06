@@ -108,10 +108,17 @@
     main {
         flex-grow: 1;
         background-color: #f0f0f0;
-        width: 100%;
+        padding-left: 3em;
+        margin-bottom: 5%; /* pour compenser la hauteur du footer */
+        overflow-y: auto;
+        padding-bottom: 2em;
     }
 
     footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
         display: flex;
         align-items: center;
         justify-content: left;
@@ -119,6 +126,7 @@
         background-color: #282c34;
         color: #fff;
         height: 10%;
+        z-index: 10;
     }
 
     .info-playlist {
@@ -146,6 +154,49 @@
         height: 40px;
         cursor: pointer;
     }
+
+    .pl li a {
+        padding: 10px;
+        color: #000;
+        background-color: #9e9d9d;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        border-radius: 5px;
+    }
+
+    .pl li a:hover {
+        background-color: #c0c0c0;
+    }
+
+    #adj  {
+        padding: 10px;
+        color: #000;
+        background-color: #9e9d9d;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        border-radius: 5px;
+        margin-top: 100px;
+    }
+
+    #adj:hover {
+        background-color: #c0c0c0;
+    }
+
+    #del  {
+        padding: 10px;
+        color: #000;
+        background-color: #9e9d9d;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        border-radius: 5px;
+    }
+
+    #del:hover {
+        background-color: #c0c0c0;
+    }
+
+
+
 
 }
 

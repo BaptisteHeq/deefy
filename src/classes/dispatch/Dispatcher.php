@@ -15,6 +15,7 @@ use iutnc\deefy\action\SigninAction;
 use iutnc\deefy\render\AudioListRenderer;
 use iutnc\deefy\render\Renderer;
 use iutnc\deefy\repository\DeefyRepository;
+use iutnc\deefy\action\LogOutAction;
 
 
 class Dispatcher
@@ -72,6 +73,10 @@ class Dispatcher
                 $action = new SigninAction();
                 $html = $action->execute();
                 break;
+            case 'logout':
+                $action = new LogOutAction();
+                $html = $action->execute();
+                break;
 
             default:
                 $action = new DefaultAction();
@@ -102,8 +107,19 @@ class Dispatcher
         //récupération du nom de l'utilisateur
         $nom = "pas connecté";
 
+
+        // Affichage du bouton en fonction de la session
         if (isset($_SESSION['user']['id'])) {
-            $nom = $_SESSION['user']['id'];
+            $nom = htmlspecialchars($_SESSION['user']['id']);
+            $authButtons = <<<BUTTONS
+        <p>$nom</p>
+        <button onclick="window.location.href='?action=logout';">Déconnexion</button>
+        BUTTONS;
+        } else {
+            $authButtons = <<<BUTTONS
+        <button onclick="window.location.href='?action=sign-in';">Connexion</button>
+        <button onclick="window.location.href='?action=add-user';">Enregistrer</button>
+        BUTTONS;
         }
 
         echo <<<HTML
@@ -125,9 +141,7 @@ class Dispatcher
         </div>
         <h1 onclick="window.location.href='?action=display-list-playlist';">Deefy</h1>
         <div class="auth-buttons">
-            <button onclick="window.location.href='?action=sign-in';">Connexion</button>
-            <button onclick="window.location.href='?action=add-user';">Enregistrer</button>
-            <p>$nom</p>
+            $authButtons
         </div>
     </header>
 
@@ -140,6 +154,7 @@ class Dispatcher
             <button onclick="window.location.href='?action=display-list-playlist';">Mes playlists</button>
             
             <button onclick="window.location.href='?action=add-playlist';">Ajouter Playlist</button>
+            <button onclick="window.location.href='?action=delete-playlist';">Supprimer la Playlist</button>
             
         </div>
     </div>
@@ -159,7 +174,7 @@ class Dispatcher
         </div>
         <div class="audio-player">
             <audio controls>
-                <source src='./audio/" . htmlspecialchars($fichier) . "' type='audio/mpeg'>
+                <source src='./audio/" . $fichier' type='audio/mpeg'>
                 Votre navigateur ne supporte pas la balise audio.
             </audio>
         </div>

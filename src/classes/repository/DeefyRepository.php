@@ -201,6 +201,10 @@ Les playlists ne contiennent pas les pistes. */
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':id' => $id]);
 
+        $sql = "DELETE FROM user2playlist WHERE id_pl = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+
 
         $sql = "DELETE FROM playlist WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);

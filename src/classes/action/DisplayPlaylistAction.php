@@ -9,7 +9,7 @@ use iutnc\deefy\repository\DeefyRepository;
 class DisplayPlaylistAction extends Action {
 
     public function execute(): string {
-        $html = '<b>Affichage de la Playlist en session</b><br>';
+        $html = '<p><b>Affichage de la Playlist en session</b></p><br>';
 
         if (isset($_GET['playlist_id'])) {
 
@@ -28,14 +28,11 @@ class DisplayPlaylistAction extends Action {
         } else {
 
             //ajouter un lien pour ajouter une track
-            $html .= '<a id="adj" href="?action=add-track">Ajouter une piste</a><br>';
+            $html .= '<p><a id="adj" href="?action=add-track">Ajouter une piste</a></p><br>';
             $pl = unserialize($_SESSION['playlist']);
             $r = new AudioListRenderer($pl);
             $html .= $r->render(Renderer::COMPACT);
 
-
-            //ajouter un lien pour supprimer la playlist
-            $html .= '<a id="del" href="?action=delete-playlist">Supprimer la playlist</a>';
 
         }
 
